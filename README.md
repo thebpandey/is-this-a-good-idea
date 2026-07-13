@@ -1,21 +1,118 @@
+<div align="center">
+  <img src="assets/hero.png" alt="is-this-a-good-idea. Four verdicts. Zero flattery." width="100%">
+</div>
+
+<div align="center">
+
+![license MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
+![type Idea Evaluation](https://img.shields.io/badge/type-Idea%20Evaluation-orange?style=for-the-badge)
+![platforms 4](https://img.shields.io/badge/platforms-4-green?style=for-the-badge)
+![verdicts GO | TEST FIRST | NO-GO | PIVOT](https://img.shields.io/badge/verdicts-GO%20%7C%20TEST%20FIRST%20%7C%20NO--GO%20%7C%20PIVOT-36393f?style=for-the-badge)
+
+</div>
+
 # is-this-a-good-idea
 
-A domain-routed idea evaluation skill. It runs your idea through hard gates, a weighted scorecard, and a cross-domain decision layer, then issues one of four verdicts: **GO**, **TEST FIRST**, **NO-GO**, or **PIVOT**.
+A domain-routed idea evaluation skill. It routes your idea to one of four domains (business, real estate, market-facing app, internal workflow tool), kills fatally flawed ideas at hard gates before they ever reach a score, ranks the survivors on five weighted dimensions, and issues exactly one of four verdicts: GO, TEST FIRST, NO-GO, or PIVOT. Every claim in the report carries an evidence tag, so you can see which parts are verified, which came from you, and which the skill assumed.
 
-It covers three domains with separate gates and scoring weights:
+```
+.----------------------------------------------------------.
+|                                                          |
+|   i s - t h i s - a - g o o d - i d e a        v1.0.0    |
+|                                                          |
+|   Four verdicts. Zero flattery.                          |
+|   GO  |  TEST FIRST  |  NO-GO  |  PIVOT                  |
+|                                                          |
+'----------------------------------------------------------'
+```
 
-- **Entrepreneurship / business ideas**
-- **Real estate investment deals**
-- **App and product builds** (market-facing products and internal workflow tools are scored differently)
+## What It Does
 
-Every verdict comes with evidence tags on every claim, counterarguments for every weakness, the falsifiable conditions that would change the verdict, and next actions where the first one is doable today.
+The evaluation runs in three layers, in order:
 
-## What Makes It Different
+1. **Hard gates.** Pass/fail kill switches specific to the routed domain. A business idea with no path to a first paid dollar and no behavioral evidence of spend fails here. A deal that cannot clear a 1.2 DSCR fails here. Failing a gate stops the run and sends the idea to PIVOT analysis. It never reaches a score.
+2. **Weighted scorecard.** Survivors are scored 1 to 5 on five dimensions with plain-language anchors, weighted by domain. A business idea weights demand evidence at 30 percent. A real estate deal weights deal economics at 35 percent. Every score gets a one-line or two-line justification.
+3. **Decision layer.** Munger's inversion (what would have to be true for this to fail), Klein's pre-mortem, expected-value tie-breaks when two options are close, and Amazon's Working Backwards press-release test. This is what converts a number into a verdict.
 
-- **Gates before scores.** A fatally flawed idea fails a hard gate and never reaches the scorecard, so a polished-looking score can't launder a broken idea.
-- **No flattery.** The skill is instructed to assess, never compliment. Strengths are findings with evidence.
-- **Evidence protocol.** When a claim is load-bearing (the verdict flips if it's wrong) and unverified, the skill stops and asks whether to search for evidence or proceed from reasoning. Nothing load-bearing gets silently assumed.
-- **Built on established frameworks only.** Kagan (Velocity to $1), Fitzpatrick (The Mom Test), Blank-era validation discipline replaced by Amazon's Working Backwards press-release test, RICE (Intercom), standard real estate underwriting screens (cap rate, cash-on-cash, DSCR), Munger's inversion, Klein's pre-mortem, and expected-value tie-breaking. Nothing invented.
+```mermaid
+flowchart LR
+    P1[Claude.ai] --> E[Evaluation Engine]
+    P2[Claude Code] --> E
+    P3[Codex CLI] --> E
+    P4[ChatGPT] --> E
+    E --> V1[GO]
+    E --> V2[TEST FIRST]
+    E --> V3[NO-GO]
+    E --> V4[PIVOT]
+```
+
+Invoke it by naming it. It never auto-triggers.
+
+```
+/is-this-a-good-idea duplex at $310k, rents $2,600 combined, 25% down
+```
+
+```
+Use the is-this-a-good-idea skill: an AI tool that drafts contractor SOWs from voice notes
+```
+
+## Example Output
+
+```text
+VERDICT: TEST FIRST
+Opportunity cost: 3 weeks and roughly $2k of build time that could
+otherwise go to the lease-abstract tool, which already has two buyers.
+
+HARD GATES
+  E-G1  Velocity to first dollar ....... PASS  Manual SOW drafting for
+        one paying contractor is billable inside 30 days. [USER-SUPPLIED]
+  E-G2  Behavioral evidence ............ PASS  You already draft these by
+        hand and get paid for them. Past behavior, not opinion. [VERIFIED]
+
+SCORECARD (Domain E)
+  Dimension                    Weight   Score
+  Demand evidence quality        30%      3    One buyer, not a market
+  Unit economics plausibility    25%      4    Margin holds if usage is low
+  Speed to first dollar          20%      5    Billable now, manually
+  Effort and operator fit        15%      4    In your existing skill set
+  Differentiation                10%      2    A competent copycat wins
+  Weighted average ............ 3.55
+
+MOST FATAL UNTESTED ASSUMPTION
+  That contractors outside your own network will pay for drafted SOWs.
+  One paying customer who is also your colleague is not demand. [ASSUMED]
+
+NEXT ACTIONS
+  1. Today: charge three contractors outside your network $150 each for a
+     hand-drafted SOW from a voice note. No build. See who pays.
+  2. If two of three pay, build the thinnest version that automates only
+     the drafting step. If none pay, the idea is NO-GO, not TEST FIRST.
+```
+
+## How It Works
+
+Gates run before scores, and that ordering is the whole point. A weighted average is a persuasive-looking number, and a fatally flawed idea can still produce a respectable one if you let it into the scorecard. So it does not get in. A failed gate routes straight to PIVOT analysis, which looks for a salvageable core rather than a total number.
+
+Verdict mapping for the ideas that clear the gates:
+
+| Verdict | Condition |
+|---|---|
+| **GO** | Weighted score 4.0 or higher, no cap triggered. Proceed. |
+| **TEST FIRST** | Weighted score 3.0 to 3.99, or a cap was triggered (for example, a real estate deal with exactly one viable exit). The report names the fatal assumption and the cheapest test that would falsify it. |
+| **PIVOT** | The idea as framed fails, but a salvageable core exists. The report names the core and the new angle. |
+| **NO-GO** | Weak across the board, nothing worth saving. The report states the kill reason in one line. |
+
+```mermaid
+flowchart TD
+    A[Intake] --> B[Domain Routing]
+    B --> C[Hard Gates]
+    C --> D{Gates Passed?}
+    D -->|No| E[PIVOT Analysis]
+    D -->|Yes| F[Weighted Scorecard]
+    F --> G[Decision Layer]
+    G --> H[Verdict Report]
+    E --> H
+```
 
 ## Install
 
@@ -65,15 +162,6 @@ Use the is-this-a-good-idea skill: an AI tool that drafts contractor scope-of-wo
 /is-this-a-good-idea internal automation that pulls rent rolls from email attachments into a spreadsheet every Monday
 ```
 
-## The Verdict Tiers
-
-| Verdict | Meaning |
-|---|---|
-| **GO** | Gates passed, weighted score 4.0 or higher, no caps triggered. Proceed. |
-| **TEST FIRST** | Viable but carries an untested fatal assumption. The report names the assumption and the cheapest test that could falsify it. |
-| **PIVOT** | The idea as framed fails, but a salvageable core exists. The report names the core and the new angle. |
-| **NO-GO** | Weak across the board with nothing worth saving. The report states the kill reason in one line. |
-
 ## File Structure
 
 ```
@@ -98,3 +186,15 @@ is-this-a-good-idea/
 ## License
 
 MIT. Copyright (c) 2026 Almora Technology / Bhaskar Pandey.
+
+<div align="center">
+
+GitHub: https://github.com/thebpandey
+
+LinkedIn: https://www.linkedin.com/in/pandeybhaskar
+
+Built by Bhaskar Pandey / Almora Technology
+
+MIT License
+
+</div>
