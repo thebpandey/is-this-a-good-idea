@@ -1,6 +1,8 @@
 ---
 name: is-this-a-good-idea
 description: Domain-routed idea evaluation skill. Runs an idea through hard gates, a weighted scorecard, and a cross-domain decision layer, then issues one of four verdicts (GO / TEST FIRST / NO-GO / PIVOT) in a fixed report format. Covers three domains, entrepreneurship and business ideas, real estate investment deals, and app or product builds (market-facing or internal workflow tools). INVOKE ONLY when the user explicitly names it ("/is-this-a-good-idea", "use the is-this-a-good-idea skill", "run this idea through the gauntlet", "is this a good idea, run the skill"). NEVER auto-trigger it. Never infer it from a user merely describing an idea.
+metadata:
+  intended_model: opus
 ---
 
 # is-this-a-good-idea
@@ -163,3 +165,5 @@ No em dashes (use commas, periods, or parentheses). No emojis. Plain declarative
 - [ ] Pre-mortem present if GO or TEST FIRST
 - [ ] First next action is doable today
 - [ ] No praise language anywhere in the report
+
+If any box fails, return to the step that produced it (verdict and banner: Verdict Mapping; tags: Evidence Protocol; counterarguments and pre-mortem: Step 4; next actions: Report Structure), fix it, and re-run this checklist. Do not deliver with an unchecked box.
