@@ -198,3 +198,7 @@ Built by Bhaskar Pandey / Almora Technology
 MIT License
 
 </div>
+
+---
+
+Built by [Bhaskar Pandey](https://www.bhaskarpandey.com).
